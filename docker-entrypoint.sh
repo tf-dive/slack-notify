@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e
 
-if [ "$1" != "./ipify-api" ]; then
+if [ "$1" != "./slack-notify" ]; then
   exec "$@"
   exit $?
 fi
