@@ -11,6 +11,8 @@ COPY bin/slack-notify ./
 
 ENV LOGGING_LEVEL WARNING
 
+COPY docker-entrypoint.sh ./
+
 RUN chown -R app:app /home/app
 
 # Change to user `app`
@@ -18,5 +20,5 @@ USER app
 
 ENTRYPOINT ["./docker-entrypoint.sh"]
 
-CMD ["./slack-"]
+CMD ["./slack-notify"]
 
