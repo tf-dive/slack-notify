@@ -46,7 +46,7 @@ jobs:
       with:
         images: ghcr.io/tf-dive/slack-notify
         tags: |
-          type=raw,value=dev
+          type=raw,value=levvels
           type=semver,pattern={{ version }}
 
     - name: Build image and publish to registry
