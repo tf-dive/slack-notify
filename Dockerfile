@@ -20,5 +20,5 @@ USER app
 
 ENTRYPOINT ["./docker-entrypoint.sh"]
 
-CMD ["/home/app/slack-notify"]
+CMD ["/slack-notify"]
 
