@@ -41,7 +41,7 @@ type Attachment struct {
 type Field struct {
 	Title string `json:"title"`
 	Value string `json:"value,omitempty"`
-	Short bool   `json:short"`
+	Short bool   `json:"short"`
 }
 
 func main() {
