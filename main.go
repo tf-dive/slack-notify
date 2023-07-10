@@ -9,13 +9,14 @@ import (
 )
 
 const (
-	EnvSlackWebhook  = "SLACK_WEBHOOK"
-	EnvSlackIcon     = "SLACK_ICON"
-	EnvSlackChannel  = "SLACK_CHANNEL"
-	EnvSlackTitle    = "SLACK_TITLE"
-	EnvSlackMessage  = "SLACK_MESSAGE"
-	EnvSlackColor    = "SLACK_COLOR"
-	EnvSlackUserName = "SLACK_USERNAME"
+	EnvSlackWebhook  			= "SLACK_WEBHOOK"
+	EnvSlackIcon					= "SLACK_ICON"
+	EnvSlackChannel  			= "SLACK_CHANNEL"
+	EnvSlackTitle    			= "SLACK_TITLE"
+	EnvSlackMessage  			= "SLACK_MESSAGE"
+	EnvSlackAttachments  	= "SLACK_ATTACHMENTS"
+	EnvSlackColor    			= "SLACK_COLOR"
+	EnvSlackUserName 			= "SLACK_USERNAME"
 )
 
 type Webhook struct {
@@ -25,14 +26,16 @@ type Webhook struct {
 	IconEmoji   string       `json:"icon_emoji,omitempty"`
 	Channel     string       `json:"channel,omitempty"`
 	UnfurlLinks bool         `json:"unfurl_links"`
-	Attachments []Attachment `json:"attachments,omitmepty"`
+	Attachments []Attachment `json:"attachments,omitempty"`
 }
 
 type Attachment struct {
 	Fallback string  `json:"fallback"`
-	Pretext  string  `json:"pretext,omitempty"`
-	Color    string  `json:"color,omitempty"`
+	Pretext  string  `json:"pretext"`
+	Color    string  `json:"color"`
 	Fields   []Field `json:"fields,omitempty"`
+	MrkDwnIn []string `json:"mrkdwn_in"`
+	Title    string  `json:"title"`
 }
 
 type Field struct {
@@ -47,17 +50,26 @@ func main() {
 		fmt.Fprintln(os.Stderr, "URL is required")
 		os.Exit(1)
 	}
-	text := os.Getenv(EnvSlackMessage)
-	if text == "" {
-		fmt.Fprintln(os.Stderr, "Message is required")
-		os.Exit(1)
-	}
 
-	msg := Webhook{
-		UserName: os.Getenv(EnvSlackUserName),
-		IconURL:  os.Getenv(EnvSlackIcon),
-		Channel:  os.Getenv(EnvSlackChannel),
-		Attachments: []Attachment{
+	test, found := os.LookupEnv("SLACK_ATTACHMENTS")
+  if found {
+      fmt.Println(test)
+  } else {
+      fmt.Println("$SLACK_ATTACHMENTS not found")
+  }
+
+	var attachments []Attachment
+	attachmentsString := os.Getenv(EnvSlackAttachments)
+	fmt.Fprintf(os.Stdout, "attachmentsString : %s\n", attachmentsString)
+	if attachmentsString == "" {
+		text := os.Getenv(EnvSlackMessage)
+		fmt.Fprintf(os.Stdout, "text : %s\n", text)
+		if text == "" {
+			fmt.Fprintln(os.Stderr, "Message is required")
+			os.Exit(1)
+		}
+
+		attachments = []Attachment{
 			{
 				Fallback: envOr(EnvSlackMessage, "This space intentionally left blank"),
 				Color:    os.Getenv(EnvSlackColor),
@@ -68,7 +80,27 @@ func main() {
 					},
 				},
 			},
-		},
+		}
+	} else {
+		attachments = []Attachment{}
+		err := json.Unmarshal([]byte(attachmentsString), &attachments)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, "Attachments is wrong")
+			fmt.Fprintln(os.Stderr, "err : ", err)
+			os.Exit(1)
+		}
+	}
+
+	if attachments == nil {
+		fmt.Fprintln(os.Stderr, "Attachments is missing")
+		os.Exit(1)
+	}
+
+	msg := Webhook{
+		UserName: os.Getenv(EnvSlackUserName),
+		IconURL:  os.Getenv(EnvSlackIcon),
+		Channel:  os.Getenv(EnvSlackChannel),
+		Attachments: attachments,
 	}
 
 	if err := send(endpoint, msg); err != nil {
