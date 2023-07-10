@@ -1,4 +1,4 @@
-FROM debian:jessie-slim
+FROM debian:bullseye-slim
 RUN apt-get clean && apt-get update && apt-get upgrade -y \
     && apt-get install -y ca-certificates
 
