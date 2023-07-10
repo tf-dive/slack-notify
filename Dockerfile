@@ -16,4 +16,7 @@ RUN chown -R app:app /home/app
 # Change to user `app`
 USER app
 
-CMD ./slack-notify
+ENTRYPOINT ["./docker-entrypoint.sh"]
+
+CMD ["./slack-"]
+
