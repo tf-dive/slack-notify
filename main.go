@@ -9,14 +9,14 @@ import (
 )
 
 const (
-	EnvSlackWebhook  			= "SLACK_WEBHOOK"
-	EnvSlackIcon					= "SLACK_ICON"
-	EnvSlackChannel  			= "SLACK_CHANNEL"
-	EnvSlackTitle    			= "SLACK_TITLE"
-	EnvSlackMessage  			= "SLACK_MESSAGE"
-	EnvSlackAttachments  	= "SLACK_ATTACHMENTS"
-	EnvSlackColor    			= "SLACK_COLOR"
-	EnvSlackUserName 			= "SLACK_USERNAME"
+	EnvSlackWebhook     = "SLACK_WEBHOOK"
+	EnvSlackIcon        = "SLACK_ICON"
+	EnvSlackChannel     = "SLACK_CHANNEL"
+	EnvSlackTitle       = "SLACK_TITLE"
+	EnvSlackMessage     = "SLACK_MESSAGE"
+	EnvSlackAttachments = "SLACK_ATTACHMENTS"
+	EnvSlackColor       = "SLACK_COLOR"
+	EnvSlackUserName    = "SLACK_USERNAME"
 )
 
 type Webhook struct {
@@ -30,12 +30,12 @@ type Webhook struct {
 }
 
 type Attachment struct {
-	Fallback string  `json:"fallback"`
-	Pretext  string  `json:"pretext"`
-	Color    string  `json:"color"`
-	Fields   []Field `json:"fields,omitempty"`
+	Fallback string   `json:"fallback"`
+	Pretext  string   `json:"pretext"`
+	Color    string   `json:"color"`
+	Fields   []Field  `json:"fields,omitempty"`
 	MrkDwnIn []string `json:"mrkdwn_in"`
-	Title    string  `json:"title"`
+	Title    string   `json:"title"`
 }
 
 type Field struct {
@@ -51,19 +51,10 @@ func main() {
 		os.Exit(1)
 	}
 
-	test, found := os.LookupEnv("SLACK_ATTACHMENTS")
-  if found {
-      fmt.Println(test)
-  } else {
-      fmt.Println("$SLACK_ATTACHMENTS not found")
-  }
-
 	var attachments []Attachment
 	attachmentsString := os.Getenv(EnvSlackAttachments)
-	fmt.Fprintf(os.Stdout, "attachmentsString : %s\n", attachmentsString)
 	if attachmentsString == "" {
 		text := os.Getenv(EnvSlackMessage)
-		fmt.Fprintf(os.Stdout, "text : %s\n", text)
 		if text == "" {
 			fmt.Fprintln(os.Stderr, "Message is required")
 			os.Exit(1)
@@ -97,9 +88,9 @@ func main() {
 	}
 
 	msg := Webhook{
-		UserName: os.Getenv(EnvSlackUserName),
-		IconURL:  os.Getenv(EnvSlackIcon),
-		Channel:  os.Getenv(EnvSlackChannel),
+		UserName:    os.Getenv(EnvSlackUserName),
+		IconURL:     os.Getenv(EnvSlackIcon),
+		Channel:     os.Getenv(EnvSlackChannel),
 		Attachments: attachments,
 	}
 
