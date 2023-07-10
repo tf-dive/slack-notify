@@ -1,7 +1,19 @@
 FROM debian:bullseye-slim
+
 RUN apt-get clean && apt-get update && apt-get upgrade -y \
     && apt-get install -y ca-certificates
 
-COPY rootfs /
+# Non-root user `app`
+RUN useradd app
+WORKDIR /home/app
 
-CMD /slack-notify
+COPY bin/slack-notify ./
+
+ENV LOGGING_LEVEL WARNING
+
+RUN chown -R app:app /home/app
+
+# Change to user `app`
+USER app
+
+CMD ["./slack-notify"]
