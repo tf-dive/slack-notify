@@ -7,17 +7,11 @@ RUN apt-get clean && apt-get update && apt-get upgrade -y \
 RUN useradd app
 WORKDIR /home/app
 
-COPY bin/slack-notify ./
-
-ENV LOGGING_LEVEL WARNING
-
-COPY docker-entrypoint.sh ./
+COPY bin/slack-notify /home/app
 
 RUN chown -R app:app /home/app
 
 # Change to user `app`
 USER app
 
-ENTRYPOINT ["./docker-entrypoint.sh"]
-
-CMD ["./slack-notify"]
+CMD ["/home/app/slack-notify"]
