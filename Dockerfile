@@ -16,4 +16,4 @@ RUN chown -R app:app /home/app
 # Change to user `app`
 USER app
 
-CMD ["./slack-notify"]
+CMD ./slack-notify

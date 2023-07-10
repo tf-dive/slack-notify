@@ -4,7 +4,7 @@ DOCKER_REGISTRY ?= "technosophos"
 .PHONY: build
 build:
 	mkdir -p bin/
-	go build -o bin/slack-notify ./main.go
+	GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o bin/slack-notify ./main.go
 
 .PHONY: docker-build
 docker-build:
