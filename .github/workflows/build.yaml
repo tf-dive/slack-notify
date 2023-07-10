@@ -30,7 +30,6 @@ jobs:
     
     - name: Build
       run: |
-        go mod vendor
         GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o bin/slack-notify ./main.go
     
     - name: Log in to the GitHub Container Registry
